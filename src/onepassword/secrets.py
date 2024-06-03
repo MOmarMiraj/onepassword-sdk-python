@@ -3,13 +3,17 @@ from json import loads
 
 
 class Secrets:
-    """Contains all operations the SDK client can perform on 1Password secrets."""
+    """
+    Read more about secrets: https://developer.1password.com/docs/cli/secret-references
+
+    Secrets point to fields in 1Password. They have the following format: op://<vault-name>/<item-name>[/<section-name>]/<field-name>
+    """
 
     def __init__(self, client_id):
         self.client_id = client_id
 
     async def resolve(self, secret_reference):
-        """Resolve the secret reference to a secret."""
+        """Resolve returns the secret the provided secret reference points to."""
         response = await _invoke(
             {
                 "clientId": self.client_id,
@@ -21,4 +25,4 @@ class Secrets:
                 },
             }
         )
-        return loads(response)
+        return str(loads(response))
