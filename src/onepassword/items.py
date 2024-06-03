@@ -1,10 +1,10 @@
 from .core import _invoke
-import json
+from json import loads
 from .types import Item
 
 
 class Items:
-    """Contains all operations the SDK client can perform on 1Password items."""
+    """The Items API holds all operations the SDK client can perform on 1Password items."""
 
     def __init__(self, client_id):
         self.client_id = client_id
@@ -22,8 +22,7 @@ class Items:
                 },
             }
         )
-        result = Item(**json.loads(response))
-        return result
+        return Item(**loads(response))
 
     async def get(self, vault_id, item_id):
         """Get an item by vault and item ID"""
@@ -33,14 +32,13 @@ class Items:
                 "invocation": {
                     "name": "Get",
                     "parameters": {
-                        "vault_id": vault_id,
                         "item_id": item_id,
+                        "vault_id": vault_id,
                     },
                 },
             }
         )
-        result = Item(**json.loads(response))
-        return result
+        return Item(**loads(response))
 
     async def update(self, item):
         """Update an existing item. You can currently only edit text and concealed fields."""
@@ -55,19 +53,19 @@ class Items:
                 },
             }
         )
-        result = Item(**json.loads(response))
-        return result
+        return Item(**loads(response))
 
     async def delete(self, vault_id, item_id):
-        """Delete an item. """
+        """Delete an item."""
+
         await _invoke(
             {
                 "clientId": self.client_id,
                 "invocation": {
                     "name": "Delete",
                     "parameters": {
-                        "vault_id": vault_id,
                         "item_id": item_id,
+                        "vault_id": vault_id,
                     },
                 },
             }
