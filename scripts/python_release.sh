@@ -63,12 +63,12 @@ BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "$BRANCH" != "main" ]]; then
     git add .
 else
-    git add src/onepassword/version.txt
-    git add src/onepassword/version-build.txt
     git stash
     git fetch origin
     git checkout -b rc/"${version_number}"
     git stash pop
+    git add src/onepassword/version.txt
+    git add src/onepassword/version-build.txt
 fi
 
 git commit -m "Release for ${version_number}"
