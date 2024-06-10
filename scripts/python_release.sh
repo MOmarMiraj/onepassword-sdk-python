@@ -74,10 +74,6 @@ fi
 git commit -m "Release for ${version_number}"
 git push origin $BRANCH
 
-
-# Login with Github CLI
-gh auth login --with-token <<< ${GITHUB_TOKEN} 
-
 gh release create "${version_number}" --title "Release ${version_number}" --notes "${changelog_content}" --repo github.com/MOmarMiraj/onepassword-sdk-python
  
 
