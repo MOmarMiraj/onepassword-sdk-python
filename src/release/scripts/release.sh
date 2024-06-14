@@ -25,6 +25,8 @@ fi
 
 git tag -a -s  "v${version}" -m "${version}"
 
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
 # Add changes and commit/push to branch
 git add .
 git commit -S -m "Release v${version}"
