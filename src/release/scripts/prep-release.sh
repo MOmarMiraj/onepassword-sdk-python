@@ -2,8 +2,6 @@
 
 # Helper script to prepare a release for the Python SDK.
 
-# Read the build number from version-build to ensure that the build number has been updated
-
 output_version_file="src/release/version.py"
 version_template_file="src/release/templates/version.tpl.py"
 
