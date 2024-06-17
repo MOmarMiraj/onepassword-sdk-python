@@ -64,8 +64,8 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build 
 
-if [[ "$current_build_number" -ge "$build" ]]; then
-    echo "Build version hasn't changed or is lower than current build version. Stopping." >&2
+if (( 10#$current_build_number >= 10#$build )); then
+    echo "Build version hasn't changed or is less than current build version. Stopping." >&2
     exit 1
 fi
 
@@ -83,19 +83,19 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 
 # if on main, then stash changes and create RC branch
 if [[ "${branch}" = "main" ]]; then
+    branch=rc/"${version}"
     git stash
     git fetch origin
-    git checkout -b rc/"${version}"
+    git checkout -b "${branch}"
     git stash apply
 fi
 
 # Add changes and commit/push to branch
 git add .
 git commit -S -m "Release v${version}"
-git push --set-upstream origin rc/"${version}"
+git push --set-upstream origin "${branch}"
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
 changelog is correctly filled out.
 Once confirmed, run 'make release' to release the SDK!"
-
