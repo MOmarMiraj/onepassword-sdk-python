@@ -57,7 +57,7 @@ update_and_validate_build() {
 
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
-            if (( 10#$current_build_number < 10#$build )); then
+            if (( 10#$current_build < 10#$build )); then
             # Write the valid build number to the file
             echo "New build number is: ${build}"
             return 0
@@ -106,7 +106,6 @@ fi
 git add .
 git commit -S -m "Release v${version}"
 git push --set-upstream origin "${branch}"
-
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
