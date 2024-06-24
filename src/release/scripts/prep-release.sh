@@ -5,7 +5,7 @@
 output_version_file="src/release/version.py"
 version_template_file="src/release/templates/version.tpl.py"
 
-# Extracts the current build number for comparison 
+# Extracts the current build/version number for comparison and backup 
 current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_version_file")
 current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "$output_version_file")
 
