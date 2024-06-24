@@ -40,8 +40,6 @@ update_and_validate_version() {
         if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
           if [[ "${current_version}" != "${version}" ]]; then
                 # TODO: Check the less than case as well.
-                # Write the valid version number to the file
-                echo "${version}" > "${version_file}"
                 echo "New version number is: ${version}"
                 return 0
             else
