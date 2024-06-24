@@ -6,7 +6,21 @@ output_version_file="src/release/version.py"
 version_template_file="src/release/templates/version.tpl.py"
 
 # Extracts the current build number for comparison 
-current_build_number=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_version_file")
+current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_version_file")
+current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "$output_version_file")
+
+# Function to execute upon exit
+cleanup() {
+    echo "Performing cleanup tasks..."
+    # Remove changelog file if it exists
+    rm -f "${changelog_file}"
+    # Revert changes to file if any
+    sed -e "s/{{ build }}/$current_build/" -e "s/{{ version }}/$current_version/" "$version_template_file" > "$output_version_file"
+    exit 1   
+}
+
+# Set the trap to call the cleanup function on exit
+trap cleanup ERR SIGINT
 
 enforce_latest_code() {
     if [[ -n "$(git status --porcelain=v1)" ]]; then
@@ -43,9 +57,14 @@ update_and_validate_build() {
 
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
+            if (( 10#$current_build_number < 10#$build )); then
             # Write the valid build number to the file
             echo "New build number is: ${build}"
             return 0
+        else
+            echo "Build version hasn't changed or is less than current build version. Stopping." >&2
+            cleanup
+        fi
         else
             echo "Invalid build number format: ${build}"
             echo "Please enter a build number in the 'Mmmppbb' format."
@@ -61,11 +80,6 @@ update_and_validate_version
 
 # Update and validate the build number
 update_and_validate_build 
-
-if (( 10#$current_build_number >= 10#$build )); then
-    echo "Build version hasn't changed or is less than current build version. Stopping." >&2
-    exit 1
-fi
 
 # Update version number in defaults.py
 sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version/" "$version_template_file" > "$output_version_file"
@@ -93,7 +107,9 @@ git add .
 git commit -S -m "Release v${version}"
 git push --set-upstream origin "${branch}"
 
+
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
 changelog is correctly filled out.
 Once confirmed, run 'make release' to release the SDK!"
+
