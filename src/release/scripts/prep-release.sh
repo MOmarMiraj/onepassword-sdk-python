@@ -84,7 +84,7 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build 
 
-# Update version number in defaults.py
+# Update version & build number in version.py
 sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version/" "$version_template_file" > "$output_version_file"
 
 changelog_file="src/release/changelogs/"${version}"-"${build}""
