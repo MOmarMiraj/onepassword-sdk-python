@@ -12,8 +12,6 @@ current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "$output_version_fi
 # Function to execute upon exit
 cleanup() {
     echo "Performing cleanup tasks..."
-    # Remove changelog file if it exists
-    rm -f "${changelog_file}"
     # Revert changes to file if any
     sed -e "s/{{ build }}/$current_build/" -e "s/{{ version }}/$current_version/" "$version_template_file" > "$output_version_file"
     exit 1   
