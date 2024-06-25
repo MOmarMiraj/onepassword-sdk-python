@@ -87,9 +87,9 @@ update_and_validate_build
 # Update version & build number in version.py
 sed -e "s/{{ build }}/$build/" -e "s/{{ version }}/$version/" "$version_template_file" > "$output_version_file"
 
-printf "Press ENTER to edit the CHANGELOG in your default editor...\n"
+printf "Press ENTER to edit the RELEASE-NOTES in your default editor...\n"
 read -r _ignore
-${EDITOR:-nano} "src/release/CHANGELOG"
+${EDITOR:-nano} "src/release/RELEASE-NOTES"
 
 # Get Current Branch Name
 branch="$(git rev-parse --abbrev-ref HEAD)"
