@@ -91,6 +91,6 @@ jobs:
             merge-multiple: true
 
       - name: Publish package distributions to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@release/v1.12
         with:
           repository-url: https://test.pypi.org/legacy/
