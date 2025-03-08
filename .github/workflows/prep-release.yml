@@ -7,8 +7,6 @@ on:
 jobs:
   update-release:
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request # Ensuring the comment is on a pull request
-
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
@@ -18,20 +16,11 @@ jobs:
         run: |
           COMMENT_BODY=$(jq --raw-output .comment.body $GITHUB_EVENT_PATH)
           
-          # Remove any carriage return characters or unexpected characters
-          COMMENT_BODY=$(echo "$COMMENT_BODY" | tr -d '\r')
-          
           # Debug output to see the value of COMMENT_BODY
           echo "COMMENT_BODY=$COMMENT_BODY"
           
-          # Store the COMMENT_BODY into the GitHub environment variable
-          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_ENV
-
-      - name: Get the PR branch name
-        id: pr_branch
-        run: |
-          PR_BRANCH=${{ github.event.issue.pull_request.head.ref }}
-          echo "PR_BRANCH=$PR_BRANCH" >> $GITHUB_ENV
+          # Set output for future steps
+          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_OUTPUT
 
       - name: Parse version, build number, and notes
         id: parse
@@ -44,17 +33,17 @@ jobs:
           
           # Capture multiline notes, keeping all content after the "notes =" line
           NOTES=$(echo "$COMMENT_BODY" | sed -n '/notes =/,$p' | sed 's/notes = "//; s/"$//')
-          
+
           # Debug output for parsed values
           echo "VERSION=$VERSION"
           echo "BUILD_NUMBER=$BUILD_NUMBER"
           echo "NOTES=$NOTES"
-          
-          # Save them as environment variables
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "NOTES=$NOTES" >> $GITHUB_ENV
+
+          # Set outputs for future steps
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "NOTES=$NOTES" >> $GITHUB_OUTPUT
 
       - name: Run your script with version, build number, and notes
         run: |
-            make prep-release "$VERSION" "$BUILD_NUMBER" "$NOTES"
+            make prep-release "${{ steps.parse.outputs.VERSION }}" "${{ steps.parse.outputs.BUILD_NUMBER }}" "${{ steps.parse.outputs.NOTES }}"
