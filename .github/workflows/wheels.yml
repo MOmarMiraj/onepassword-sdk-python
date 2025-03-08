@@ -23,7 +23,7 @@ jobs:
 
       # Need to grab the SDK version for the wheel name
       - name: Extract SDK Version
-        run: echo "SDK_VERSION=$(cat sdk_version.txt)" >> "$GITHUB_ENV"
+        run: echo "SDK_VERSION=$(cat version.txt)" >> "$GITHUB_ENV"
         shell: bash
       
       - name: Install cibuildwheel
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v4
         # Need to grab the SDK version for the wheel name
       - name: Extract SDK Version
-        run: echo "SDK_VERSION=$(cat sdk_version.txt)" >> "$GITHUB_ENV"
+        run: echo "SDK_VERSION=$(cat version.txt)" >> "$GITHUB_ENV"
         shell: bash
         
       - name: Install dependencies
