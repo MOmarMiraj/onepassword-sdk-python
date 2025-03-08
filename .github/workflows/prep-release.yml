@@ -1,4 +1,4 @@
-name: Prep Release
+name: Prep Release V1
 
 on:
   issue_comment:
