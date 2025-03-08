@@ -33,19 +33,14 @@ jobs:
           VERSION=$(echo "$COMMENT_BODY" | grep -oP 'version = \K[0-9]+\.[0-9]+\.[0-9]+')
           BUILD_NUMBER=$(echo "$COMMENT_BODY" | grep -oP 'build_number = \K\d+')
           
-          # Capture multiline notes, keeping all content after the "notes =" line
-          NOTES=$(echo "$COMMENT_BODY" | sed -n '/notes =/,$p' | sed 's/notes = "//; s/"$//')
-
           # Debug output for parsed values
           echo "VERSION=$VERSION"
           echo "BUILD_NUMBER=$BUILD_NUMBER"
-          echo "NOTES=$NOTES"
 
           # Set outputs for future steps
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
-          echo "NOTES=$NOTES" >> $GITHUB_OUTPUT
 
       - name: Run your script with version, build number, and notes
         run: |
-            make prep-release "${{ steps.parse.outputs.VERSION }}" "${{ steps.parse.outputs.BUILD_NUMBER }}" "${{ steps.parse.outputs.NOTES }}"
+            make prep-release "${{ steps.parse.outputs.VERSION }}" "${{ steps.parse.outputs.BUILD_NUMBER }}"
