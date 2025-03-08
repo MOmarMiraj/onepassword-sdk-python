@@ -15,7 +15,7 @@ macOS_version_x86_64=10.9
 macOS_version_arm64=11.0
 
 # Extracts the current verison number for cleanup function
-current_version=$(awk -F "['\"]" '/SDK_VERSION =/{print $2}' "$output_version_file")
+current_version=$(cat version.txt)
 
 # Function to execute upon exit
 cleanup() {
