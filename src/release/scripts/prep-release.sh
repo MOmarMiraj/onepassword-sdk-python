@@ -8,10 +8,8 @@ build_number_template_file="src/release/templates/build_number.tpl.py"
 
 version=$1
 build=$2
-notes=$3
 echo $version
 echo $build
-echo $notes
 
 # Extracts the current build/version number for comparison and backup 
 current_version=$(cat "$output_version_file" 2>/dev/null || echo "")
@@ -88,8 +86,6 @@ update_and_validate_build
 # Update version & build number in version.txt and build_number.py respectively
 echo -n "$version" > "$output_version_file"
 echo -n "SDK_BUILD_NUMBER = \"$current_build\"" > "$output_build_file"
-
-echo ${notes} > src/release/RELEASE-NOTES
 
 # Get Current Branch Name
 branch="$(git rev-parse --abbrev-ref HEAD)"
