@@ -7,33 +7,33 @@ on:
 jobs:
   update-release:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.head.ref, 'sdk-core/')
 
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
+        - name: Branch Names
+          uses: tj-actions/branch-names@v8.0.1
+        - name: Checkout the code
+          if: contains(${{steps.branch-names.outputs.current_branch}}, 'sdk-core/')
+          uses: actions/checkout@v4
+        - name: Get comment content
+          id: comment
+          run: |
+            COMMENT_BODY=$(jq --raw-output .comment.body $GITHUB_EVENT_PATH)
+            echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_ENV
 
-      - name: Get comment content
-        id: comment
-        run: |
-          COMMENT_BODY=$(jq --raw-output .comment.body $GITHUB_EVENT_PATH)
-          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_ENV
+        - name: Parse version, build number, and notes
+          id: parse
+          run: |
+            echo "Parsing version, build_number, and notes from the comment..."
+            # Extract version, build number, and notes using regular expressions
+            VERSION=$(echo "$COMMENT_BODY" | grep -oP 'version = \K[0-9]+\.[0-9]+\.[0-9]+')
+            BUILD_NUMBER=$(echo "$COMMENT_BODY" | grep -oP 'build_number = \K\d+')
+            NOTES=$(echo "$COMMENT_BODY" | grep -oP 'notes = "\K.*(?=")')
 
-      - name: Parse version, build number, and notes
-        id: parse
-        run: |
-          echo "Parsing version, build_number, and notes from the comment..."
-
-          # Extract version, build number, and notes using regular expressions
-          VERSION=$(echo "$COMMENT_BODY" | grep -oP 'version = \K[0-9]+\.[0-9]+\.[0-9]+')
-          BUILD_NUMBER=$(echo "$COMMENT_BODY" | grep -oP 'build_number = \K\d+')
-          NOTES=$(echo "$COMMENT_BODY" | grep -oP 'notes = "\K.*(?=")')
-
-          # Save them as environment variables
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "NOTES=$NOTES" >> $GITHUB_ENV
-
-      - name: Run your script with version, build number, and notes
-        run: |
+            # Save them as environment variables
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+            echo "NOTES=$NOTES" >> $GITHUB_ENV
+  
+        - name: Run your script with version, build number, and notes
+          run: |
             make prep-release "$VERSION" "$BUILD_NUMBER" "$NOTES"
