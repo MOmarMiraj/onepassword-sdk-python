@@ -103,7 +103,7 @@ fi
 
 # Add changes and commit/push to branch
 git add .
-git commit -m "Release v${version}"
+git commit -S -m "Release v${version}"
 git push --set-upstream origin "${branch}"
 
 echo "Release has been prepared..
