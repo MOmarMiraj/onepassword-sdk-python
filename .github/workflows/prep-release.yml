@@ -17,12 +17,12 @@ jobs:
           COMMENT_BODY=$(jq --raw-output .comment.body $GITHUB_EVENT_PATH)
 
           COMMENT_BODY=$(echo "$COMMENT_BODY" | tr -d '\r')
-          
+
           # Debug output to see the value of COMMENT_BODY
           echo "COMMENT_BODY=$COMMENT_BODY"
-          
+
           # Set output for future steps
-          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_OUTPUT
+          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_ENV
 
       - name: Parse version, build number, and notes
         id: parse
@@ -32,14 +32,14 @@ jobs:
           # Extract version, build number, and notes using regular expressions
           VERSION=$(echo "$COMMENT_BODY" | grep -oP 'version = \K[0-9]+\.[0-9]+\.[0-9]+')
           BUILD_NUMBER=$(echo "$COMMENT_BODY" | grep -oP 'build_number = \K\d+')
-          
+
           # Debug output for parsed values
           echo "VERSION=$VERSION"
           echo "BUILD_NUMBER=$BUILD_NUMBER"
 
           # Set outputs for future steps
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
       - name: Run your script with version, build number, and notes
         run: |
