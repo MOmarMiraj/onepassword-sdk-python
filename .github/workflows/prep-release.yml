@@ -14,9 +14,7 @@ jobs:
       - name: Get comment content
         id: comment
         run: |
-          COMMENT_BODY=$(jq --raw-output .comment.body $GITHUB_EVENT_PATH)
-
-          COMMENT_BODY=$(echo "$COMMENT_BODY" | tr -d '\r')
+          COMMENT_BODY=${{ toJSON(github.event.comment.body) }}
 
           # Debug output to see the value of COMMENT_BODY
           echo "COMMENT_BODY=$COMMENT_BODY"
