@@ -82,7 +82,7 @@ enforce_latest_code
 # Update and validate the version number
 update_and_validate_version
 
-# Update and validate the build number
+# Update and validate the build number /
 update_and_validate_build
 
 # Update version & build number in the appropriate files
