@@ -14,13 +14,14 @@ jobs:
       - name: Get comment content
         id: comment
         run: |
-          COMMENT_BODY=${{ toJSON(github.event.comment.body) }}
+          # Capture the comment body in a structured JSON format
+          COMMENT_BODY="${{ toJSON(github.event.comment.body) }}"
 
-          # Debug output to see the value of COMMENT_BODY
+          # Debugging output
           echo "COMMENT_BODY=$COMMENT_BODY"
 
-          # Set output for future steps
-          echo "$COMMENT_BODY" > comment.json
+          # Save it as an output for use in the next step
+          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_ENV
 
       - name: Parse version, build number, and notes
         id: parse
