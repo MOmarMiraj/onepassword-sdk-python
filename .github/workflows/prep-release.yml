@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Get the version, build number, and release notes from inputs
         id: get_inputs
