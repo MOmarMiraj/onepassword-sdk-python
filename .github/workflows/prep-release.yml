@@ -15,7 +15,7 @@ jobs:
         id: comment
         run: |
           # Capture the comment body in a structured JSON format
-          COMMENT_BODY="${{ toJSON(github.event.comment.body) }}"
+          COMMENT_BODY="${{ github.event.comment.body }}"
 
           # Debugging output
           echo "COMMENT_BODY=$COMMENT_BODY"
@@ -28,22 +28,20 @@ jobs:
         run: |
           echo "Parsing version, build_number, and notes from the comment..."
 
-          COMMENT_BODY=$(cat comment.json)
+          # Parse the JSON string using fromJSON
+          VERSION="${{ fromJSON(env.COMMENT_BODY).version }}"
+          BUILD_NUMBER="${{ fromJSON(env.COMMENT_BODY).build_number }}"
+          RELEASE_NOTES="${{ fromJSON(env.COMMENT_BODY).release_notes }}"
 
-          # Extract values using jq
-          VERSION=$(echo "$COMMENT_BODY" | jq -r .version)
-          BUILD_NUMBER=$(echo "$COMMENT_BODY" | jq -r .build_number)
-          RELEASE_NOTES=$(echo "$COMMENT_BODY" | jq -r .release_notes)
-
-          # Debugging parsed values
+          # Debugging output for parsed values
           echo "VERSION=$VERSION"
           echo "BUILD_NUMBER=$BUILD_NUMBER"
           echo "RELEASE_NOTES=$RELEASE_NOTES"
 
-          # Set outputs for future steps
+          # Save parsed values for future steps
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "RELEASE_NOTES=$RELEASE_NOTES" >> src/release/RELEASE-NOTES
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
 
 
       - name: Run your script with version, build number, and notes
