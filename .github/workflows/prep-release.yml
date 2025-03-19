@@ -30,7 +30,7 @@ jobs:
           # Get inputs passed to the workflow
           VERSION="${{ github.event.inputs.version }}"
           BUILD_NUMBER="${{ github.event.inputs.build_number }}"
-          printf "%s" "${{ github.event.inputs.RELEASE_NOTES }}" > src/release/RELEASE-NOTES
+          echo -e ${{ github.event.inputs.release_notes }} > src/release/RELEASE-NOTES
 
           # Save the parsed values for future steps
           echo "VERSION=$VERSION" >> $GITHUB_ENV
