@@ -26,8 +26,12 @@ cleanup() {
 trap cleanup SIGINT
 
 enforce_latest_code() {
-    if [[ -n "$(git status --porcelain=v1)" ]]; then
-        echo "ERROR: working directory is not clean."
+    # Define the file to skip (relative path)
+    SKIP_FILE="src/release/RELEASE-NOTES"
+
+    # Check if there are any uncommitted changes, excluding the specific file
+    if [[ -n "$(git status --porcelain=v1 | grep -v "$SKIP_FILE")" ]]; then
+        echo "ERROR: working directory is not clean (excluding $SKIP_FILE)."
         echo "Please stash your changes and try again."
         exit 1
     fi
