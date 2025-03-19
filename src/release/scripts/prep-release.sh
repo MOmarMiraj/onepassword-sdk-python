@@ -11,7 +11,7 @@ build=$2
 echo $version
 echo $build
 
-# Extracts the current build/version number for comparison and backup 
+# Extracts the current build/version number for comparison and backup
 current_version=$(cat "$output_version_file" 2>/dev/null || echo "")
 current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_build_file")
 
@@ -21,7 +21,7 @@ cleanup() {
     # Revert changes to file if any
     echo -n "$current_version" > "$output_version_file"
     echo -n "SDK_BUILD_NUMBER = \"$current_build\"" > "$output_build_file"
-    exit 1   
+    exit 1
 }
 
 # Set the trap to call the cleanup function on exit
@@ -39,14 +39,14 @@ enforce_latest_code() {
 update_and_validate_version() {
     while true; do
         # Validate the version number format
-        if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then        
+        if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
             if [[ "${current_version}" != "${version}" ]]; then
                 # TODO: Check the less than case as well.
                 echo "New version number is: ${version}"
                 return 0
             else
                 echo "Version hasn't changed."
-            fi        
+            fi
         else
             echo "Invalid version number format: ${version}"
             echo "Please enter a version number in the 'x.y.z(-beta.w)' format."
@@ -55,7 +55,7 @@ update_and_validate_version() {
 }
 
 # Function to validate the build number format.
-# SEMVER Format: Mmmppbb - 7 Digits 
+# SEMVER Format: Mmmppbb - 7 Digits
 update_and_validate_build() {
     while true; do
         # Validate the build number format
@@ -81,7 +81,7 @@ enforce_latest_code
 update_and_validate_version
 
 # Update and validate the build number
-update_and_validate_build 
+update_and_validate_build
 
 # Update version & build number in version.txt and build_number.py respectively
 echo -n "$version" > "$output_version_file"
@@ -101,11 +101,10 @@ fi
 
 # Add changes and commit/push to branch
 git add .
-git commit -S -m "Release v${version}"
+git commit -m "Release v${version}"
 git push --set-upstream origin "${branch}"
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
 changelog is correctly filled out.
 Once confirmed, run 'make release' to release the SDK!"
-
