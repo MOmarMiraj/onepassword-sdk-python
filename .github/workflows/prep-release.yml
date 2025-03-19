@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., 0.2.2)'
+        description: 'Version number'
         required: true
         type: string
       build_number:
-        description: 'Build number (e.g., 0020002)'
+        description: 'Build number '
         required: true
         type: string
       release_notes:
@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
+
+      - name: Set up Git user identity
+        run: |
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "actions@github.com"
 
       - name: Get the version, build number, and release notes from inputs
         id: get_inputs
@@ -44,4 +49,4 @@ jobs:
 
       - name: Run your script with version, build number, and release notes
         run: |
-            make prep-release "$VERSION" "$BUILD_NUMBER" "$RELEASE_NOTES"
+          make prep-release VERSION="$VERSION" BUILD_NUMBER="$BUILD_NUMBER" RELEASE_NOTES="$RELEASE_NOTES"
