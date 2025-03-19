@@ -3,13 +3,13 @@
 # Helper script to prepare a release for the Python SDK.
 
 output_version_file="version.txt"
+release_notes_path="src/release/RELEASE-NOTES"
 output_build_file="src/onepassword/build_number.py"
 build_number_template_file="src/release/templates/build_number.tpl.py"
 
 version=$1
 build=$2
-echo $version
-echo $build
+release_notes=$3
 
 # Extracts the current build/version number for comparison and backup
 current_version=$(cat "$output_version_file" 2>/dev/null || echo "")
@@ -83,9 +83,10 @@ update_and_validate_version
 # Update and validate the build number
 update_and_validate_build
 
-# Update version & build number in version.txt and build_number.py respectively
+# Update version & build number & release notes in the appropriate files
 echo -n "$version" > "$output_version_file"
-echo -n "SDK_BUILD_NUMBER = \"$current_build\"" > "$output_build_file"
+echo -n "SDK_BUILD_NUMBER = \"$build\"" > "$output_build_file"
+echo -n "$release_notes" > "$release_notes_path"
 
 # Get Current Branch Name
 branch="$(git rev-parse --abbrev-ref HEAD)"
