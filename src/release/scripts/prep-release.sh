@@ -9,7 +9,7 @@ build_number_template_file="src/release/templates/build_number.tpl.py"
 
 version=$1
 build=$2
-release_notes="\"$3\""
+release_notes=$3
 
 # Extracts the current build/version number for comparison and backup
 current_version=$(cat "$output_version_file" 2>/dev/null || echo "")
