@@ -42,7 +42,7 @@ jobs:
           # Set outputs for future steps
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> src/release/RELEASE-NOTES
 
 
       - name: Run your script with version, build number, and notes
