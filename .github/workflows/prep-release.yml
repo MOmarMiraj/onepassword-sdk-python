@@ -30,7 +30,9 @@ jobs:
           # Get inputs passed to the workflow
           VERSION="${{ github.event.inputs.version }}"
           BUILD_NUMBER="${{ github.event.inputs.build_number }}"
-          RELEASE_NOTES=${{ github.event.inputs.release_notes }}
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.inputs.RELEASE_NOTES }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
           # Debugging output for parsed values
           echo "VERSION=$VERSION"
@@ -41,6 +43,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
           echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
+        shell: bash
 
       - uses: qoomon/actions--setup-git@v1
 
@@ -49,3 +52,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           make prep-release VERSION="$VERSION" BUILD_NUMBER="$BUILD_NUMBER" RELEASE_NOTES="$RELEASE_NOTES"
+        shell: bash
