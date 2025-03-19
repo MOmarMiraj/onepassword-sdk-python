@@ -1,0 +1,18 @@
+name: Release SDK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Release-SDK:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/sdk-core/') # Only run on branches that start with sdk-core/
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Run the Release Script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make release
+        shell: bash
