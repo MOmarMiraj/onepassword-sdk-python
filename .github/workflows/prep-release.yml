@@ -24,32 +24,24 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
-      - name: Get the version, build number, and release notes from inputs
+      - name: Parse and Validate Inputs
         id: get_inputs
         run: |
           # Get inputs passed to the workflow
           VERSION="${{ github.event.inputs.version }}"
           BUILD_NUMBER="${{ github.event.inputs.build_number }}"
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          echo "${{ github.event.inputs.RELEASE_NOTES }}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-          # Debugging output for parsed values
-          echo "VERSION=$VERSION"
-          echo "BUILD_NUMBER=$BUILD_NUMBER"
-          echo "RELEASE_NOTES=$RELEASE_NOTES"
+          echo "${{ github.event.inputs.RELEASE_NOTES }}" > src/onepassword/release/RELEASE-NOTES
 
           # Save the parsed values for future steps
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
         shell: bash
 
       - uses: qoomon/actions--setup-git@v1
 
-      - name: Run your script with version, build number, and release notes
+      - name: Run the Prep Release Script
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          make prep-release VERSION="$VERSION" BUILD_NUMBER="$BUILD_NUMBER" RELEASE_NOTES="$RELEASE_NOTES"
+          make prep-release VERSION="$VERSION" BUILD_NUMBER="$BUILD_NUMBER"
         shell: bash
