@@ -29,9 +29,9 @@ jobs:
         run: |
           echo "Parsing version, build_number, and notes from the comment..."
 
-          # Extract version, build number, and notes using regular expressions
-          VERSION=$(echo "$COMMENT_BODY" | grep -oP 'version = \K[0-9]+\.[0-9]+\.[0-9]+')
-          BUILD_NUMBER=$(echo "$COMMENT_BODY" | grep -oP 'build_number = \K\d+')
+          # Extract version and build number using regex
+          VERSION=$(echo "$COMMENT_BODY" | grep -oP 'version\s*=\s*\K[0-9]+\.[0-9]+\.[0-9]+')
+          BUILD_NUMBER=$(echo "$COMMENT_BODY" | grep -oP 'build_number\s*=\s*\K\d+')
 
           # Debug output for parsed values
           echo "VERSION=$VERSION"
