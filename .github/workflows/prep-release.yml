@@ -48,6 +48,6 @@ jobs:
 
       - name: Run your script with version, build number, and release notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
             make prep-release VERSION="$VERSION" BUILD_NUMBER="$BUILD_NUMBER" RELEASE_NOTES="$RELEASE_NOTES"
