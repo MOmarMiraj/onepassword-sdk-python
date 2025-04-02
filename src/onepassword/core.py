@@ -3,21 +3,30 @@ import platform
 
 from onepassword.errors import raise_typed_exception
 
-# In empirical tests, we determined that maximum message size that can cross the FFI boundary 
+# In empirical tests, we determined that maximum message size that can cross the FFI boundary
 # is ~128MB. Past this limit, FFI will throw an error and the program will crash.
 # We set the limit to 50MB to be safe and consistent with the other SDKs (where this limit is 64MB), to be reconsidered upon further testing
 MESSAGE_LIMIT = 50 * 1024 * 1024
 
 machine_arch = platform.machine().lower()
-
-if machine_arch in ["x86_64", "amd64"]:
-    import onepassword.lib.x86_64.op_uniffi_core as core
-elif machine_arch in ["aarch64", "arm64"]:
-    import onepassword.lib.aarch64.op_uniffi_core as core
-else:
-    raise ImportError(
-        f"Your machine's architecture is not currently supported: {machine_arch}"
-    )
+mac_verison = platform.mac_ver()[0].split(".")[0] # gets the main version of macOS
+base_path = "onepassword.lib"
+os = platform.system().lower()
+if os == "darwin":
+    python_version = platform.python_version()[:4]
+    if machine_arch in ["x86_64", "amd64"]:
+        if python_version > "3.13":
+            import onepassword
+        else
+            onepassword.lib.x86_64-macsox-10.9.op_uniffi_core as core
+# if machine_arch in ["x86_64", "amd64"]:
+#     import onepassword.lib.x86_64.op_uniffi_core as core
+# elif machine_arch in ["aarch64", "arm64"]:
+#     import onepassword.lib.aarch64.op_uniffi_core as core
+# else:
+#     raise ImportError(
+#         f"Your machine's architecture is not currently supported: {machine_arch}"
+#     )
 
 
 # InitClient creates a client instance in the current core module and returns its unique ID.
