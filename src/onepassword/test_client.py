@@ -8,7 +8,6 @@ TOKEN = os.getenv("OP_SERVICE_ACCOUNT_TOKEN")
 
 ## test resolve function
 
-
 # valid
 @pytest.mark.asyncio
 async def test_valid_resolve():
