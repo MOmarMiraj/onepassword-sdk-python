@@ -39,7 +39,7 @@ jobs:
           CIBW_TEST_REQUIRES: "pydantic pytest pytest-asyncio"
           CIBW_TEST_COMMAND: "python -m pytest {project}/src/onepassword/test_client.py"
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.TEST_SERVICE_ACCOUNT_TOKEN }}
-          CIBW_ENVIRONMENT_PASS_LINUX: OP_SERVICE_ACCOUNT_TOKEN # to pass in the SA token, for some reason Linux doesn't read the env variables correctly
+          CIBW_ENVIRONMENT_PASS_LINUX: OP_SERVICE_ACCOUNT_TOKEN # to pass in the SA token, Linux doesn't read the env variables correctly
         run: |
           python -m cibuildwheel --output-dir dist
 
