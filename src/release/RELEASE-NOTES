@@ -1,1 +1,20 @@
-hello
+# Release notes SDKs 0.5.0
+
+## NEW
+
+- ** and  item metadata:** Items and item overviews ****now expose attributes with their creation and last edit times**.**
+- **Resolving secrets in bulk**: With the  function, the SDK is now able to resolve multiple secrets at once, improving the performance of the operation.
+
+## IMPROVED
+
+- **Support for new field types:** Items with  and  fields can now be created, retrieved, and edited using the 1Password SDK.
+- **Item sharing for attachments and documents**: Items with files attached can now be shared.
+- **Adding custom fields in sections automatically**: If a custom field has no specified section, the SDKs now automatically add the custom field to an empty section within the item, creating it if necessary.
+- ** in item overviews**: The return type of  now also contains the item tags.
+- **Broader item editing capabilities**: You can now use the items.put function with more item types, including those with fields that are not directly editable through the SDK, like legacy fields, or passkeys.
+
+## FIXED
+
+- **Improvements to resolving secret references:**
+    - Archived items are no longer used for secret references.
+    - When multiple sections match a section query when resolving secret references, the SDKs now look through the fields in all matching sections instead of erroring.
