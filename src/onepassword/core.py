@@ -8,10 +8,9 @@ from onepassword.errors import raise_typed_exception
 # We set the limit to 50MB to be safe and consistent with the other SDKs (where this limit is 64MB), to be reconsidered upon further testing
 MESSAGE_LIMIT = 50 * 1024 * 1024
 
-machine_arch = platform.machine()
-python_version = platform.python_version()[:4]
+machine_arch = platform.machine().lower()
+major,minor = map(int,platform.python_version()[:4].split('.'))
 base_path = "onepassword.lib"
-
 arch_map = {
     "x86_64": "x86_64",
     "amd64": "x86_64",
@@ -22,9 +21,9 @@ arch_map = {
 if machine_arch not in arch_map:
     raise ImportError(f"Your machine's architecture is not currently supported: {machine_arch}")
 
-if platform.system().lower() == "Darwin":
+if platform.system().lower() == "darwin":
     if arch_map[machine_arch] == "x86_64":
-        core_path = f"{base_path}.x86_64_macosx_10_13.op_uniffi_core" if python_version > "3.13" else f"{base_path}.x86_64_macosx_10_9.op_uniffi_core"
+        core_path = f"{base_path}.x86_64_macosx_10_13.op_uniffi_core" if major > 3 and minor >= 13 else f"{base_path}.x86_64_macosx_10_9.op_uniffi_core"
     else:
         core_path = f"{base_path}.aarch64_macosx_11_0.op_uniffi_core"
 else:
