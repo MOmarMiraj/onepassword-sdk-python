@@ -62,7 +62,6 @@ def get_shared_library_data_to_include():
     uniffi_bindings_file_name = os.path.join(include_path, uniffi_bindings_file_name)
     return [c_shared_library_file_name, uniffi_bindings_file_name]
 
-
 setup(
     packages=find_packages(
         where="src",
