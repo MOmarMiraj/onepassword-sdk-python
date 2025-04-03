@@ -1,15 +1,18 @@
-# SDK Release 0.2.0 - notes
-
-For Go, JS & Python:
-
 ## NEW
 
-- **File Support:** You can now create Document items, attach files to items, delete files from items, and read file contents using the SDK.
+- ** and  item metadata:** Items and item overviews ****now expose attributes with their creation and last edit times**.**
+- **Resolving secrets in bulk**: With the  function, the SDK is now able to resolve multiple secrets at once, improving the performance of the operation.
 
 ## IMPROVED
 
-- **Read files using secret references**: You can now resolve secret references that point to files attached to 1Password items.
-- **Read SSH keys in Open SSH format**: You can now use a secret reference to fetch a private key in OpenSSH format. For example: 
-- **Support for more item field types**: You can now create, retrieve, and edit items containing SSH keys, Month-Year and Menu-type fields using the SDK.
-- **Read more field types using secret references**: You can now resolve secret references that point to information stored in Date, Month/Year, Address, and Reference field types.
-- **Improved error messages**: The error messages returned by the SDK were improved to be more clear and actionable.
+- **Support for new field types:** Items with  and  fields can now be created, retrieved, and edited using the 1Password SDK.
+- **Item sharing for attachments and documents**: Items with files attached can now be shared.
+- **Adding custom fields in sections automatically**: If a custom field has no specified section, the SDKs now automatically add the custom field to an empty section within the item, creating it if necessary.
+- ** in item overviews**: The return type of  now also contains the item tags.
+- **Broader item editing capabilities**: You can now use the items.put function with more item types, including those with fields that are not directly editable through the SDK, like legacy fields, or passkeys.
+
+## FIXED
+
+- **Improvements to resolving secret references:**
+    - Archived items are no longer used for secret references.
+    - When multiple sections match a section query when resolving secret references, the SDKs now look through the fields in all matching sections instead of erroring.
