@@ -52,7 +52,6 @@ jobs:
           name: onepassword-sdk-${{ env.SDK_VERSION }}-${{ matrix.os }}
           path: ./dist/*.whl
 
-          
   build-sdist:
     name: Build source distribution for Python SDK
     runs-on: ubuntu-latest
