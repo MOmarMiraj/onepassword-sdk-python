@@ -21,7 +21,6 @@ class BinaryDistribution(Distribution):
     def has_ext_modules(self):
         return True
 
-
 def get_shared_library_data_to_include():
     # Return the correct uniffi C shared library extension for the given platform
     include_path = "lib"
