@@ -25,7 +25,7 @@ def get_shared_library_data_to_include():
     # Return the correct uniffi C shared library extension for the given platform
     machine_type = os.getenv("PYTHON_MACHINE_PLATFORM", platform.machine().lower())
     platform_name = os.getenv("PYTHON_OS_PLATFORM", platform.system())
-    python_version = platform.python_version()[:4]
+    major, minor, *_ = map(int, platform.python_version().split('.'))
 
     arch_map = {
         "x86_64": "x86_64",
@@ -39,7 +39,7 @@ def get_shared_library_data_to_include():
     if platform_name == "Darwin":
         if machine_type in arch_map:
             if arch_map[machine_type] == "x86_64":
-                macos_version = "x86_64_macosx_10_13" if python_version >= "3.13" else "x86_64_macosx_10_9"
+                macos_version = "x86_64_macosx_10_13" if major > 3 and minor >= 13 else "x86_64_macosx_10_9"
             else:
                 macos_version = "aarch64_macosx_11_0"
         include_path.append(macos_version)
