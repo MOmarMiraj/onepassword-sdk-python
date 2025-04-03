@@ -23,31 +23,12 @@ class BinaryDistribution(Distribution):
 
 def get_shared_library_data_to_include():
     # Return the correct uniffi C shared library extension for the given platform
-    machine_type = os.getenv("PYTHON_MACHINE_PLATFORM", platform.machine().lower())
-    platform_name = os.getenv("PYTHON_OS_PLATFORM", platform.system())
-    major, minor, *_ = map(int, platform.python_version().split('.'))
-
-    arch_map = {
-        "x86_64": "x86_64",
-        "amd64": "x86_64",
-        "aarch64": "aarch64",
-        "arm64": "aarch64",
-    }
-
-    include_path = ["lib"]
-
-    if platform_name == "Darwin":
-        if machine_type in arch_map:
-            if arch_map[machine_type] == "x86_64":
-                macos_version = "x86_64_macosx_10_13" if major > 3 and minor >= 13 else "x86_64_macosx_10_9"
-            else:
-                macos_version = "aarch64_macosx_11_0"
-        include_path.append(macos_version)
-    else:
-        if machine_type in arch_map:
-            include_path.append(arch_map[machine_type])
-
-    include_path = os.path.join(*include_path)
+    include_path = "lib"
+    machine_type = os.getenv("PYTHON_MACHINE_PLATFORM") or platform.machine().lower()
+    if machine_type in ["x86_64", "amd64"]:
+        include_path = os.path.join(include_path, "x86_64")
+    elif machine_type in ["aarch64", "arm64"]:
+        include_path = os.path.join(include_path, "aarch64")
 
     # Map current platform to the correct shared library file name
     platform_to_lib = {
@@ -55,12 +36,15 @@ def get_shared_library_data_to_include():
         "Linux": "libop_uniffi_core.so",
         "Windows": "op_uniffi_core.dll",
     }
+    platform_name = os.getenv("PYTHON_OS_PLATFORM") or platform.system()
     c_shared_library_file_name = platform_to_lib.get(platform_name, "")
     c_shared_library_file_name = os.path.join(include_path, c_shared_library_file_name)
 
     uniffi_bindings_file_name = "op_uniffi_core.py"
     uniffi_bindings_file_name = os.path.join(include_path, uniffi_bindings_file_name)
+
     return [c_shared_library_file_name, uniffi_bindings_file_name]
+
 
 setup(
     packages=find_packages(
