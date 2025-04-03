@@ -31,7 +31,6 @@ else:
 
 core = __import__(core_path, fromlist=["core"])
 
-
 # InitClient creates a client instance in the current core module and returns its unique ID.
 async def _init_client(client_config):
     try:
