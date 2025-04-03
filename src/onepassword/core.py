@@ -10,7 +10,7 @@ MESSAGE_LIMIT = 50 * 1024 * 1024
 
 
 machine_arch = platform.machine().lower()
-major,minor = map(int,platform.python_version()[:4].split('.'))
+major, minor, *_ = map(int, platform.python_version().split('.'))
 base_path = "onepassword.lib"
 arch_map = {
     "x86_64": "x86_64",
