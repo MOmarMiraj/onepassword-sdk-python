@@ -1,4 +1,4 @@
-name: Release Builder
+name: Wheels Builder and Publisher
 on:
   pull_request:
     branches:
@@ -12,6 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.head.ref, 'sdk-core/')
     strategy:
+      fail-fast: false
       matrix:
         # macOS 13 is an Intel runner and macOS 14 is an Apple Silicon runner
         os: [ubuntu-22.04, ubuntu-22.04-arm, windows-latest, macos-13, macos-14]
