@@ -41,9 +41,11 @@ jobs:
           CIBW_TEST_COMMAND: "python -m pytest {project}/src/onepassword/test_client.py"
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.TEST_SERVICE_ACCOUNT_TOKEN }}
           CIBW_ENVIRONMENT_PASS_LINUX: OP_SERVICE_ACCOUNT_TOKEN # We have to specify this to pass the token to the test command
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_DEBUG_KEEP_CONTAINER: true
+          CIBW_DEBUG_TRACEBACK: true
         run: |
           python -m cibuildwheel --output-dir dist
-        continue-on-error: true  # Prevents the job from stopping on failure
 
       - uses: actions/upload-artifact@v4
         with:
