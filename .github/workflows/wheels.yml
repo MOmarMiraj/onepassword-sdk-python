@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.head.ref, 'sdk-core/')
     environment:
-      name: pypi
+      name: testpypi
       url: https://test.pypi.org/project/onepassword-sdk/
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
