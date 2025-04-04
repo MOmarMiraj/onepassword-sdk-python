@@ -21,8 +21,8 @@ jobs:
           git_tag_gpgsign: true
       - name: Setup Git User
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name GitHub Actions
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run the Release Script
         env:
