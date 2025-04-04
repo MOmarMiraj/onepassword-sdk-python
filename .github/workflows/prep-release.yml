@@ -11,10 +11,6 @@ on:
         description: "Build number "
         required: true
         type: string
-      release_notes:
-        description: "Release notes for the version"
-        required: true
-        type: string
 
 jobs:
   prepare-release:
@@ -34,8 +30,8 @@ jobs:
           git_tag_gpgsign: true
       - name: Setup Git User
         run: |
-          git config --global user.email "${{ steps.import-gpg.outputs.email }}"
-          git config --global user.name "${{ steps.import-gpg.outputs.name }}"
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Parse and Validate Inputs
         id: get_inputs
@@ -43,7 +39,6 @@ jobs:
           # Get inputs passed to the workflow
           VERSION="${{ github.event.inputs.version }}"
           BUILD_NUMBER="${{ github.event.inputs.build_number }}"
-          echo -e "${{ github.event.inputs.RELEASE_NOTES }}" > src/release/RELEASE-NOTES
 
           # Save the parsed values for future steps
           echo "VERSION=$VERSION" >> $GITHUB_ENV
