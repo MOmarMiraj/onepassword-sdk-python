@@ -38,7 +38,7 @@ jobs:
           make prep-release VERSION="$VERSION" BUILD_NUMBER="$BUILD_NUMBER"
         shell: bash
 
-  build_wheels:
+  build-wheels:
     name: Build wheels for Python SDK on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     if: startsWith(github.ref, 'refs/heads/sdk-core/')
@@ -113,9 +113,10 @@ jobs:
           name: onepassword-sdk-${{ env.SDK_VERSION }}
           path: ./dist/*.tar.gz
 
-  Release-SDK:
+  release-sdk:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/sdk-core/') # Only run on branches that start with sdk-core/
+    needs: [build-wheels, build-sdist]
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
@@ -144,7 +145,7 @@ jobs:
       url: https://test.pypi.org/project/onepassword-sdk/
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
-    needs: [build_wheels, build-sdist]
+    needs: [release-sdk]
     steps:
       - uses: actions/download-artifact@v4
         with:
