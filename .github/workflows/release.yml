@@ -1,4 +1,4 @@
-name: Release SDK on GitHub
+name: Release Python SDK
 
 on:
   workflow_dispatch:
