@@ -89,22 +89,22 @@ update_and_validate_build
 echo -n "$version" > "$output_version_file"
 echo -n "SDK_BUILD_NUMBER = \"$build\"" > "$output_build_file"
 
-# Get Current Branch Name
-branch="$(git rev-parse --abbrev-ref HEAD)"
+# # Get Current Branch Name
+# branch="$(git rev-parse --abbrev-ref HEAD)"
 
-# if on main, then stash changes and create RC branch
-if [[ "${branch}" = "main" ]]; then
-    branch=rc/"${version}"
-    git stash
-    git fetch origin
-    git checkout -b "${branch}"
-    git stash apply
-fi
+# # if on main, then stash changes and create RC branch
+# if [[ "${branch}" = "main" ]]; then
+#     branch=rc/"${version}"
+#     git stash
+#     git fetch origin
+#     git checkout -b "${branch}"
+#     git stash apply
+# fi
 
-# Add changes and commit/push to branch
-git add .
-git commit -S -m "Release v${version}"
-git push --set-upstream origin "${branch}"
+# # Add changes and commit/push to branch
+# git add .
+# git commit -S -m "Release v${version}"
+# git push --set-upstream origin "${branch}"
 
 echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
