@@ -6,6 +6,8 @@ output_version_file=".VERSION"
 output_build_file="src/onepassword/build_number.py"
 build_number_template_file="src/release/templates/build_number.tpl.py"
 
+version=$1
+build=$2
 
 # Extracts the current build/version number for comparison and backup
 current_version=$(cat "$output_version_file" | tr -d '[:space:]')
@@ -16,7 +18,7 @@ cleanup() {
     echo "Performing cleanup tasks..."
     # Revert changes to file if any
     echo -n "$current_version" > "$output_version_file"
-    sed -e "s/{{ build }}/$current_build/" "$build_number_template_file" > "$output_build_file"
+    echo -n "SDK_BUILD_NUMBER = \"$current_build\"" > "$output_build_file"
     exit 1
 }
 
@@ -24,8 +26,12 @@ cleanup() {
 trap cleanup SIGINT
 
 enforce_latest_code() {
-    if [[ -n "$(git status --porcelain=v1)" ]]; then
-        echo "ERROR: working directory is not clean."
+    # Define the file to skip (relative path)
+    SKIP_FILE="src/release/RELEASE-NOTES"
+
+    # Check if there are any uncommitted changes, excluding the specific file
+    if [[ -n "$(git status --porcelain=v1 | grep -v "$SKIP_FILE")" ]]; then
+        echo "ERROR: working directory is not clean (excluding $SKIP_FILE)."
         echo "Please stash your changes and try again."
         exit 1
     fi
@@ -34,9 +40,6 @@ enforce_latest_code() {
 # Function to validate the version number format x.y.z(-beta.w)
 update_and_validate_version() {
     while true; do
-        # Prompt the user to input the version number
-        read -p "Enter the version number (format: x.y.z(-beta.w)): " version
-
         # Validate the version number format
         if [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
             if [[ "${current_version}" != "${version}" ]]; then
@@ -57,9 +60,6 @@ update_and_validate_version() {
 # SEMVER Format: Mmmppbb - 7 Digits
 update_and_validate_build() {
     while true; do
-        # Prompt the user to input the build number
-        read -p "Enter the build number (format: Mmmppbb): " build
-
         # Validate the build number format
         if [[ "${build}" =~ ^[0-9]{7}$ ]]; then
             if (( 10#$current_build < 10#$build )); then
@@ -82,17 +82,12 @@ enforce_latest_code
 # Update and validate the version number
 update_and_validate_version
 
-# Update and validate the build number
+# Update and validate the build number /
 update_and_validate_build
 
-# Update version & build number in .VERSION and build_number.py respectively
+# Update version & build number in the appropriate files
 echo -n "$version" > "$output_version_file"
-sed  -e "s/{{ build }}/$build/" "$build_number_template_file" > "$output_build_file"
-
-
-printf "Press ENTER to edit the RELEASE-NOTES in your default editor...\n"
-read -r _ignore
-${EDITOR:-nano} "src/release/RELEASE-NOTES"
+echo -n "SDK_BUILD_NUMBER = \"$build\"" > "$output_build_file"
 
 # Get Current Branch Name
 branch="$(git rev-parse --abbrev-ref HEAD)"
@@ -115,4 +110,3 @@ echo "Release has been prepared..
 Make sure to double check version/build numbers in their appropriate files and
 changelog is correctly filled out.
 Once confirmed, run 'make release' to release the SDK!"
-

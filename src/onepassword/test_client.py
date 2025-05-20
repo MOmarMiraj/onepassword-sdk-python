@@ -8,7 +8,6 @@ TOKEN = os.getenv("OP_SERVICE_ACCOUNT_TOKEN")
 
 ## test resolve function
 
-
 # valid
 @pytest.mark.asyncio
 async def test_valid_resolve():
@@ -18,7 +17,7 @@ async def test_valid_resolve():
         integration_version=onepassword_defaults.DEFAULT_INTEGRATION_VERSION,
     )
     result = await client.secrets.resolve(
-        secret_reference="op://gowwbvgow7kxocrfmfvtwni6vi/6ydrn7ne6mwnqc2prsbqx4i4aq/password"
+        secret_reference="op://bhld6zk6hkuntyqlsjy3bdawey/jrtghaxr4hybspesgij35g5myy/password"
     )
     assert result == "test_password_42"
 

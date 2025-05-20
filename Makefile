@@ -4,7 +4,7 @@ release:
 	src/release/scripts/release.sh
 
 prep-release:
-	src/release/scripts/prep-release.sh
+	src/release/scripts/prep-release.sh $(VERSION) $(BUILD_NUMBER) "$(RELEASE_NOTES)"
 
 build-wheels:
 	src/release/scripts/build-wheels.sh $(PYTHON_VERSIONS)
@@ -12,7 +12,7 @@ build-wheels:
 release/install-dependencies:
 # Install latest version of pyenv if not already installed
 	brew install pyenv
-	
+
 # Install all the python versions we support in one line
 	pyenv install --skip-existing $(PYTHON_VERSIONS)
 
@@ -21,4 +21,3 @@ release/install-dependencies:
 		pyenv local $$version; \
 		pyenv exec pip3 install wheel setuptools build --break-system-packages; \
 	done
-

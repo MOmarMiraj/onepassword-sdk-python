@@ -19,7 +19,6 @@ else:
         f"Your machine's architecture is not currently supported: {machine_arch}"
     )
 
-
 # InitClient creates a client instance in the current core module and returns its unique ID.
 async def _init_client(client_config):
     try:
