@@ -2,7 +2,7 @@
 
 # Helper script to prepare a release for the Python SDK.
 
-output_version_file="version.txt"
+output_version_file=".VERSION"
 output_build_file="src/onepassword/build_number.py"
 build_number_template_file="src/release/templates/build_number.tpl.py"
 
@@ -10,8 +10,8 @@ version=$1
 build=$2
 
 # Extracts the current build/version number for comparison and backup
-current_version=$(cat "$output_version_file" 2>/dev/null || echo "")
-current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_build_file")
+current_version=$(cat "$output_version_file" | tr -d '[:space:]')
+current_build=$(awk -F "['\"]" '/SDK_BUILD_NUMBER =/{print $2}' "$output_build_file" | tr -d '[:space:]')
 
 # Function to execute upon exit
 cleanup() {
