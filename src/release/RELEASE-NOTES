@@ -1,13 +1,66 @@
-# 1Password Python SDK v0.2.0
+# 1Password Python SDK v0.3.0
 
 ## NEW
 
-- **File Support:** You can now create Document items, attach files to items, delete files from items, and read file contents using the SDK.
+- **Support for item states**: You can now fetch an item's state using the SDK. `ItemOverview` exposes one of two states: `Active` or `Archived`.
+    - `Active`: An item located inside a vault. (Default)
+    - `Archived`: An item that has been moved to the Archive. 1Password doesn't include archived items in search results or suggest them when you fill in apps and browsers. You can keep archived items as long as you'd like.
+- **Filtering listed items by state**: You can now filter the results of the item list function by item state.
 
-## IMPROVED
+## FIXED
 
-- **Read files using secret references**: You can now resolve secret references that point to files attached to 1Password items.
-- **Read SSH keys in Open SSH format**: You can now use a secret reference to fetch a private key in OpenSSH format. For example: `op://vault/<SSH item>/private key?ssh-format=openssh`
-- **Support for more item field types**: You can now create, retrieve, and edit items containing SSH keys, Month-Year and Menu-type fields using the SDK.
-- **Read more field types using secret references**: You can now resolve secret references that point to information stored in Date, Month/Year, Address, and Reference field types.
-- **Improved error messages**: The error messages returned by the SDK were improved to be more clear and actionable.
+- **Deleting Archived Items:** The SDK now supports deleting items from the archive.
+
+## ⚠️ BREAKING CHANGES ⚠️
+This release contains breaking changes for two functions in the Python SDK.
+
+**Vault listing**
+
+* The function name has changed from `list_all` to `list`. To use this in your code, replace:
+```python
+vaults = await client.vaults.list_all(vault_id)
+```
+with:
+```python
+vaults = await client.vaults.list(vault_id)
+```
+
+* The return type of the vault listing function has changed from `SDKIterator[VaultOverview]` to `List[VaultOverview]`. To use this in your code, replace:
+
+```python
+async for vault in vaults:
+    # using vault overview
+```
+with:
+```python
+for vault in vaults:
+    # using vault overview
+```
+**Item listing**
+
+* The function name has changed from `ListAll` to `List`. To use this in your code, replace:
+```python
+overviews = await client.items.list_all(vault_id)
+```
+with:
+```python
+overviews = await client.items.list(vault_id, ItemListFilter(
+                content=ItemListFilterByStateInner(
+                    active=True,
+                    archived=True,
+                )
+            ))
+```
+
+* The return type of the item listing function has changed from `SDKIterator[ItemOverview]` to `List[ItemOverview]`. To use this in your code, replace:
+```python
+async for overview in overviews:
+    # using item overview
+```
+with:
+```python
+for overview in overviews:
+    # using item overview
+```
+
+This does not affect any code that's already deployed, and will not take effect in your codebase until you choose to update to version 0.3.0 or later of the 1Password Python SDK.
