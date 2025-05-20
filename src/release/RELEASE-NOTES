@@ -1,20 +1,66 @@
-# Release notes SDKs 0.5.0
+# 1Password Python SDK v0.3.0
 
 ## NEW
 
-- ** and  item metadata:** Items and item overviews ****now expose attributes with their creation and last edit times**.**
-- **Resolving secrets in bulk**: With the  function, the SDK is now able to resolve multiple secrets at once, improving the performance of the operation.
-
-## IMPROVED
-
-- **Support for new field types:** Items with  and  fields can now be created, retrieved, and edited using the 1Password SDK.
-- **Item sharing for attachments and documents**: Items with files attached can now be shared.
-- **Adding custom fields in sections automatically**: If a custom field has no specified section, the SDKs now automatically add the custom field to an empty section within the item, creating it if necessary.
-- ** in item overviews**: The return type of  now also contains the item tags.
-- **Broader item editing capabilities**: You can now use the items.put function with more item types, including those with fields that are not directly editable through the SDK, like legacy fields, or passkeys.
+- **Support for item states**: You can now fetch an item's state using the SDK. `ItemOverview` exposes one of two states: `Active` or `Archived`.
+    - `Active`: An item located inside a vault. (Default)
+    - `Archived`: An item that has been moved to the Archive. 1Password doesn't include archived items in search results or suggest them when you fill in apps and browsers. You can keep archived items as long as you'd like.
+- **Filtering listed items by state**: You can now filter the results of the item list function by item state.
 
 ## FIXED
 
-- **Improvements to resolving secret references:**
-    - Archived items are no longer used for secret references.
-    - When multiple sections match a section query when resolving secret references, the SDKs now look through the fields in all matching sections instead of erroring.
+- **Deleting Archived Items:** The SDK now supports deleting items from the archive.
+
+## ⚠️ BREAKING CHANGES ⚠️
+This release contains breaking changes for two functions in the Python SDK.
+
+**Vault listing**
+
+* The function name has changed from `list_all` to `list`. To use this in your code, replace:
+```python
+vaults = await client.vaults.list_all(vault_id)
+```
+with:
+```python
+vaults = await client.vaults.list(vault_id)
+```
+
+* The return type of the vault listing function has changed from `SDKIterator[VaultOverview]` to `List[VaultOverview]`. To use this in your code, replace:
+
+```python
+async for vault in vaults:
+    # using vault overview
+```
+with:
+```python
+for vault in vaults:
+    # using vault overview
+```
+**Item listing**
+
+* The function name has changed from `ListAll` to `List`. To use this in your code, replace:
+```python
+overviews = await client.items.list_all(vault_id)
+```
+with:
+```python
+overviews = await client.items.list(vault_id, ItemListFilter(
+                content=ItemListFilterByStateInner(
+                    active=True,
+                    archived=True,
+                )
+            ))
+```
+
+* The return type of the item listing function has changed from `SDKIterator[ItemOverview]` to `List[ItemOverview]`. To use this in your code, replace:
+```python
+async for overview in overviews:
+    # using item overview
+```
+with:
+```python
+for overview in overviews:
+    # using item overview
+```
+
+This does not affect any code that's already deployed, and will not take effect in your codebase until you choose to update to version 0.3.0 or later of the 1Password Python SDK.
