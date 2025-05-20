@@ -8,7 +8,9 @@ on:
         required: true
         type: string
       build_number:
-        description: "New build number for the SDKs in the format of Mmmppbb "
+        description: "New build number for the SDKs in the format of Mmmppbb"
+        required: true
+        type: string
 
 jobs:
   prepare-release:
