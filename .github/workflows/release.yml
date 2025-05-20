@@ -157,8 +157,8 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/sdk-core/')
     environment:
-      name: pypi
-      url: https://pypi.org/project/onepassword-sdk/
+      name: testpypi
+      url: https://test.pypi.org/project/onepassword-sdk/
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     needs: [Release-SDK]
@@ -168,5 +168,7 @@ jobs:
           pattern: onepassword-sdk-*
           path: ./dist
           merge-multiple: true
-      - name: Publish package distributions to PyPi
-        uses: pypa/gh-action-pypi-publish@release/v1.12
+      - name: Publish package distributions to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+              repository-url: https://test.pypi.org/legacy/
