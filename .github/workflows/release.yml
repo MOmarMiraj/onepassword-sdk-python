@@ -11,7 +11,7 @@ on:
         description: "New build number for the SDKs in the format of Mmmppbb"
         required: true
         type: string
-
+#test
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
