@@ -4,7 +4,7 @@ release:
 	src/release/scripts/release.sh
 
 prep-release:
-	src/release/scripts/prep-release.sh $(VERSION) $(BUILD_NUMBER) "$(RELEASE_NOTES)"
+	src/release/scripts/prep-release.sh $(VERSION) $(BUILD_NUMBER)
 
 build-wheels:
 	src/release/scripts/build-wheels.sh $(PYTHON_VERSIONS)

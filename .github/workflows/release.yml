@@ -36,7 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          make prep-release VERSION={{ env.SDK_VERSION }} BUILD_NUMBER={{ env.SDK_BUILD_NUMBER }}
+          make prep-release VERSION=${{ env.SDK_VERSION }} BUILD_NUMBER=${{ env.SDK_BUILD_NUMBER }}
         shell: bash
 
   build-wheels:
