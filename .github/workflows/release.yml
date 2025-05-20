@@ -18,8 +18,8 @@ jobs:
     # Only run on branches that start with sdk-core/
     if: startsWith(github.ref, 'refs/heads/sdk-core/')
     env:
-      VERSION: ${{ github.event.inputs.version }}
-      BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+      SDK_VERSION: ${{ github.event.inputs.version }}
+      SDK_BUILD_NUMBER: ${{ github.event.inputs.build_number }}
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
